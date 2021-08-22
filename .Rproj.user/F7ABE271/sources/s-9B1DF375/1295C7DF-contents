@@ -1,0 +1,44 @@
+install.packages("dplyr")
+library("dplyr")
+library("ggpubr")
+install.packages("ggsignif", type="win.binary") 
+install.packages("ggpubr", type="win.binary") 
+
+library(ISLR)
+shapiro.test(data$CreditScore)
+
+# Shapiro-Wilk normality test 
+
+# perform the normality 
+# test for all numerical variables of carseats
+normality(carseats, Sales, CompPrice, Income)
+
+
+# Select all columns between year and day (inclusive)
+normality(carseats, Sales:Income)
+
+# Select all columns except those from year to day (inclusive)
+normality(carseats, -(Sales:Income))
+
+
+# use dplyr to sort variables that do not follow a 
+# normal distribution in order of p_value:
+library(dplyr)
+
+carseats %>%
+  normality() %>%
+  filter(p_value <= 0.01) %>% 
+  arrange(abs(p_value))
+
+
+
+
+# normality test of log(Income) for 
+# each combination of ShelveLoc and US 
+# categorical variables to search for 
+# variables that follow the normal distribution.
+carseats %>%
+  mutate(log_income = log(Income)) %>%
+  group_by(ShelveLoc, US) %>%
+  normality(log_income) %>%
+  filter(p_value > 0.01)

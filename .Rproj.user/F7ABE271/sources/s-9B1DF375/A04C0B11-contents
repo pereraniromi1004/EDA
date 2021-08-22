@@ -1,0 +1,8 @@
+# Select columns by name
+plot_normality(carseats, Sales, CompPrice)
+
+
+carseats %>%
+  filter(ShelveLoc == "Good") %>%
+  group_by(US) %>%
+  plot_normality(Income)
